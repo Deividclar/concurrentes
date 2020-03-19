@@ -117,7 +117,7 @@ BattleshipGame.prototype.getGameState = function (player, gridOwner) {
  */
 BattleshipGame.prototype.getEarth = function (player) {
   return {
-    earth: this.players[player].earth,
+    earths: this.players[player].earths,
     towers: this.players[player].towers
   };
 };

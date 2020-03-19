@@ -105,7 +105,7 @@ var Game = (function () {
   function updateGrid(player, gridState, earth) {
     grid[player] = gridState;
     drawGrid(player);
-    // drawGridEarth(player, earth)
+    drawGridEarth(player, earth)
   };
 
   /**
@@ -135,10 +135,10 @@ var Game = (function () {
 
     if (isWinner) {
       $('#turn-status').removeClass('alert-opponent-turn').removeClass('alert-your-turn')
-        .addClass('alert-winner').html('You won! <a href="#" class="btn-leave-game">Play again</a>.');
+        .addClass('alert-winner').html('Has ganado <a href="#" class="btn-leave-game">Jugar de nuevo</a>.');
     } else {
       $('#turn-status').removeClass('alert-opponent-turn').removeClass('alert-your-turn')
-        .addClass('alert-loser').html('You lost. <a href="#" class="btn-leave-game">Play again</a>.');
+        .addClass('alert-loser').html('Perdiste. <a href="#" class="btn-leave-game">Jugar de nuevo</a>.');
     }
     $('.btn-leave-game').click(sendLeaveRequest);
   }
@@ -147,7 +147,7 @@ var Game = (function () {
    * Draw a grid with squares, ships and shot marks
    */
   function drawGridEarth(player, earth) {
-    drawEarth(player, earth.earth)
+    drawEarth(player, earth.earths)
     drawTowers(player, earth.towers)
   };
 
@@ -220,35 +220,43 @@ var Game = (function () {
    * Draw shot marks on grid (black crosses for missed and red circles for hits)
    * @param {Number} gridIndex
    */
-  function drawEarth(gridIndex, earth) {
-    var i, j, squareX, squareY;
-    context[gridIndex].fillStyle = '#444444';
-    for (i = 0; i < gridRows; i++) {
-      for (j = 0; j < gridCols; j++) {
-        squareX = j * (squareWidth + gridBorder) + gridBorder;
-        squareY = i * (squareHeight + gridBorder) + gridBorder;
+  function drawTowers(gridIndex, towers) {
+    var tower, i, x, y,
+      towerWidth, towerLength
 
-        // draw black cross if there is a missed shot on square
-        if (earth.earth[i * gridCols + j] === -1) {
-          ship = earth.towers[i];
-          x = ship.x * (squareWidth + gridBorder) + gridBorder + shipPadding;
-          y = ship.y * (squareHeight + gridBorder) + gridBorder + shipPadding;
-          shipWidth = squareHeight - shipPadding * 2;
-          shipLength = squareWidth * ship.size + (gridBorder * (ship.size - 1)) - shipPadding * 2;
-          context[gridIndex].fillRect(x, y, shipLength, shipWidth);
-        }
-        // draw red circle if hit on square
-        else if (earth.towers[i * gridCols + j] >= 0) {
-          ship = earth.towers[i];
+    context[gridIndex].fillStyle = '#ffffff';
 
-          x = ship.x * (squareWidth + gridBorder) + gridBorder + shipPadding;
-          y = ship.y * (squareHeight + gridBorder) + gridBorder + shipPadding;
+    for (i = 0; i < towers.length; i++) {
+      tower = towers[i];
 
-          shipWidth = squareHeight - shipPadding * 2;
-          shipLength = squareWidth * ship.size + (gridBorder * (ship.size - 1)) - shipPadding * 2;
-          context[gridIndex].fillRect(x, y, shipLength, shipWidth);
-        }
-      }
+      x = tower.x * (squareWidth + gridBorder) + gridBorder + shipPadding;
+      y = tower.y * (squareHeight + gridBorder) + gridBorder + shipPadding;
+
+      towerWidth = squareWidth * tower.size + (gridBorder * (tower.size - 1)) - shipPadding * 2;
+      towerLength = squareHeight * tower.size + (gridBorder * (tower.size - 1)) - shipPadding * 2;
+      context[gridIndex].fillRect(x, y, towerWidth, towerLength);
+    }
+  };
+
+  /**
+   * Draw shot marks on grid (black crosses for missed and red circles for hits)
+   * @param {Number} gridIndex
+   */
+  function drawEarth(gridIndex, earths) {
+    var earth, i, x, y,
+      earthWidth, earthLength
+
+    context[gridIndex].fillStyle = '#804000';
+
+    for (i = 0; i < earths.length; i++) {
+      earth = earths[i];
+
+      x = earth.x * (squareWidth + gridBorder) + gridBorder;
+      y = earth.y * (squareHeight + gridBorder) + gridBorder;
+
+      earthWidth = squareWidth * earth.size + (gridBorder * (earth.size - 1));
+      earthLength = squareHeight * earth.size + (gridBorder * (earth.size - 1));
+      context[gridIndex].fillRect(x, y, earthWidth, earthLength);
     }
   };
 
