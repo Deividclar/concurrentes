@@ -40,7 +40,7 @@ io.on('connection', function(socket) {
       
       // Send message to opponent
       socket.broadcast.to('game' + users[socket.id].inGame.id).emit('chat', {
-        name: 'Oponente',
+        name: 'Contrincante',
         message: entities.encode(msg),
       });
 

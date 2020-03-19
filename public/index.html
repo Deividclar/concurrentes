@@ -4,7 +4,7 @@
     <title>Concurrentes</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -30,7 +30,6 @@
                         <div class="panel panel-primary">
                             <div class="panel-heading">Esperando sala</div>
                             <div class="panel-body">
-                                <p>Usted se ha conectado al servidor</p>
                                 <p>Esperando por otro jugador</p>
                             </div>
                         </div>
@@ -43,17 +42,17 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-primary">
-                            <div class="panel-heading">Battleship Game #<span id="game-number"></span></div>
+                            <div class="panel-heading"> <h3><strong> NAVAL BATTLE II </strong></h3> </div>
                             <div class="panel-body">
 
                                 <!-- Player grids -->
                                 <div class="row">
                                     <div class="col-md-6 player-grid text-center">
-                                        <h3>Usted</h3>
+                                        <h3 class="title">MI TABLERO</h3>
                                         <canvas id="canvas-grid1" width="400" height="400">El navegador no soporta canvas</canvas>
                                     </div>
                                     <div class="col-md-6 player-grid text-center">
-                                        <h3>Oponente</h3>
+                                        <h3 class="title">CONTRINCANTE</h3 class="title">
                                         <canvas id="canvas-grid2" width="400" height="400">El navegador no soporta canvas</canvas>
                                     </div>
                                 </div>
@@ -75,7 +74,7 @@
                                     <form id="message-form" action="">
                                         <div class="input-group">
                                         <input id="message" class="form-control" autocomplete="off" />
-                                        <div class="input-group-btn">
+                                        <div class="input-group-btn" style="padding-left: 30px;">
                                             <button class="btn btn-primary">Enviar mensaje</button>
                                         </div>
                                         </div>

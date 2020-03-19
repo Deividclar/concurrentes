@@ -29,7 +29,6 @@ $(function () {
     $('#disconnected').hide();
     $('#waiting-room').hide();
     $('#game').show();
-    $('#game-number').html(gameId);
   })
 
   /**
