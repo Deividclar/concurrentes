@@ -120,7 +120,7 @@ var Game = (function () {
       if (turn) {
         $('#turn-status').removeClass('alert-opponent-turn').addClass('alert-your-turn').html('Es su turno');
       } else {
-        $('#turn-status').removeClass('alert-your-turn').addClass('alert-opponent-turn').html('Esperando el oponente');
+        $('#turn-status').removeClass('alert-your-turn').addClass('alert-opponent-turn').html('Esperando al contrincante');
       }
     }
   };
