@@ -146,9 +146,10 @@ var Game = (function () {
   /*
    * Draw a grid with squares, ships and shot marks
    */
-  function drawGridEarth(player, earth) {
-    drawEarth(player, earth.earths)
-    drawTowers(player, earth.towers)
+  function drawGridEarth(gridIndex, earth) {
+    drawEarth(gridIndex, earth.earths)
+    drawTowers(gridIndex, earth.towers)
+    drawGrid(1);
   };
 
   /*
