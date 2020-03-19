@@ -28,14 +28,16 @@ h3 {
 }
 
 .panel, .panel-body {
+    background-color: bisque;
     padding-bottom: 0px;
     margin-bottom: 0px;
 }
 
 .panel-primary > .panel-heading, .btn-primary, .btn-primary:active, .btn-primary:focus {
     border-radius: 0px;
-    background-color: #333;
-    border-color: #333;
+    background-color: darkgoldenrod;
+    border-color: darkgoldenrod;
+    text-align: center;
 }
 
 .btn-primary:hover {
@@ -84,15 +86,15 @@ h3 {
 }
 
 .alert-your-turn {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1;
+    color: white;
+    background-color: #b8860b;
+    border-color: #b8860b;
 }
 
 .alert-opponent-turn {
-    color: #767676;
-    background-color: #f0f0f0;
-    border-color: #e9e9e9;
+    color: white;
+    background-color: #b8860b8a;
+    border-color: #b8860b;
 }
 
 .alert-winner {
@@ -105,4 +107,8 @@ h3 {
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1;
+}
+
+.title{
+    font-family: fantasy;
 }
