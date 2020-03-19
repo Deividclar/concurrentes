@@ -83,7 +83,7 @@ BattleshipGame.prototype.shoot = function (position) {
     }
 
     // Check if game over
-    if (this.players[opponent].getShipsLeft() <= 0) {
+    if (this.players[opponent].getShipsLeft() <= 0 && this.players[opponent].getTowersLeft() <= 0) {
       this.gameStatus = GameStatus.gameOver;
       this.winningPlayer = opponent === 0 ? 1 : 0;
     }

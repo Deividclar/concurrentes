@@ -150,6 +150,7 @@ var Game = (function () {
     drawEarth(gridIndex, earth.earths)
     drawTowers(gridIndex, earth.towers)
     drawGrid(1);
+    drawMarks(gridIndex);
   };
 
   /*
@@ -290,8 +291,6 @@ var Game = (function () {
           const y = squareY + (squareHeight / 2);
           const radiusX = squareWidth / 2 - shipPadding
           const radiusY = squareHeight / 2 - shipPadding
-
-          console.log(x, y, radiusX, radiusY);
 
           context[gridIndex].ellipse(x, y, radiusX, radiusY, 0, 0, 2 * Math.PI, false);
           context[gridIndex].fillStyle = '#E62E2E';

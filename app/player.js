@@ -13,6 +13,7 @@ function Player(id) {
   this.id = id;
   this.shots = Array(Settings.gridRows * Settings.gridCols);
   this.shipGrid = Array(Settings.gridRows * Settings.gridCols);
+  this.towerGrid = Array(Settings.gridRows * Settings.gridCols);
   this.earths = []
   this.ships = [];
   this.towers = [];
@@ -20,6 +21,7 @@ function Player(id) {
   for (i = 0; i < Settings.gridRows * Settings.gridCols; i++) {
     this.shots[i] = 0;
     this.shipGrid[i] = -1;
+    this.towerGrid[i] = -1;
   }
 
   this.createRandomEarths()
@@ -41,9 +43,15 @@ Player.prototype.shoot = function (gridIndex) {
     this.shots[gridIndex] = 2;
     return true;
   } else {
-    // Miss
-    this.shots[gridIndex] = 1;
-    return false;
+    if (this.shipGrid[gridIndex] == -3) {
+      this.towers[this.towerGrid[gridIndex]].hits++;
+      this.shots[gridIndex] = 2;
+      return true;
+    } else {
+      // Miss
+      this.shots[gridIndex] = 1;
+      return false;
+    }
   }
 };
 
@@ -62,6 +70,38 @@ Player.prototype.getSunkShips = function () {
 
   return sunkShips;
 };
+
+/**
+ * Get an array of sunk ships
+ * @returns {undefined}
+ */
+Player.prototype.getSunkTowers = function () {
+  var i, sunkTowers = [];
+
+  for (i = 0; i < this.towers.length; i++) {
+    if (this.towers[i].isSunk()) {
+      sunkTowers.push(this.towers[i]);
+    }
+  }
+
+  return sunkTowers;
+};
+
+/**
+ * Get the number of ships left
+ * @returns {Number} Number of ships left
+ */
+Player.prototype.getTowersLeft = function () {
+  var i, towerCount = 0;
+
+  for (i = 0; i < this.towers.length; i++) {
+    if (!this.towers[i].isSunk()) {
+      towerCount++;
+    }
+  }
+
+  return towerCount;
+}
 
 /**
  * Get the number of ships left
@@ -188,6 +228,7 @@ Player.prototype.placeTowerRandom = function (tower, towerIndex) {
       // place ship array-index in shipGrid
       gridIndex = tower.y * Settings.gridCols + tower.x;
       this.shipGrid[gridIndex] = -3;
+      this.towerGrid[gridIndex] = towerIndex;
       return true;
     }
   }
