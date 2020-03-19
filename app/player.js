@@ -1,7 +1,7 @@
 var Ship = require('./ship.js');
 var Tower = require('./tower.js');
 var Settings = require('./settings.js');
-var Maps = require('./maps.js');
+var Earth = require('./earth.js');
 
 /**
  * Player constructor
@@ -10,12 +10,10 @@ var Maps = require('./maps.js');
 function Player(id) {
   var i;
 
-  const map = Math.floor((Math.random() * 5));
-
   this.id = id;
   this.shots = Array(Settings.gridRows * Settings.gridCols);
-  this.earth = Maps[map]
   this.shipGrid = Array(Settings.gridRows * Settings.gridCols);
+  this.earths = []
   this.ships = [];
   this.towers = [];
 
@@ -24,13 +22,11 @@ function Player(id) {
     this.shipGrid[i] = -1;
   }
 
+  this.createRandomEarths()
+
   this.createRandomTowers()
 
-  if (!this.createRandomShips()) {
-    // Random placement of ships failed. Use fallback layout (should rarely happen).
-    this.ships = [];
-    this.createShips();
-  }
+  this.createRandomShips()
 };
 
 /**
@@ -87,6 +83,28 @@ Player.prototype.getShipsLeft = function () {
  * Create ships and place them randomly in grid
  * @returns {Boolean}
  */
+Player.prototype.createRandomEarths = function () {
+  var earthIndex;
+
+  for (earthIndex = 0; earthIndex < Settings.earths.length; earthIndex++) {
+    const size = Settings.earths[earthIndex]
+    earth = new Earth(size);
+
+    if (!this.placeEarthRandom(earth)) {
+      return false;
+    }
+
+    this.earths.push(earth);
+  }
+
+  return true;
+};
+
+
+/**
+ * Create ships and place them randomly in grid
+ * @returns {Boolean}
+ */
 Player.prototype.createRandomTowers = function () {
   var towerIndex;
 
@@ -129,6 +147,31 @@ Player.prototype.createRandomShips = function () {
  * @param {Number} shipIndex
  * @returns {Boolean}
  */
+Player.prototype.placeEarthRandom = function (earth) {
+  var i, xMax, yMax, tryMax = 250;
+
+  for (i = 0; i < tryMax; i++) {
+
+    xMax = Settings.gridCols;
+    yMax = Settings.gridRows;
+
+    earth.x = Math.floor(Math.random() * xMax);
+    earth.y = Math.floor(Math.random() * yMax);
+    if (!this.checkEarthOverlap(earth)) {
+      this.fillEarth(earth)
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Try to place a ship randomly in grid without overlapping another ship.
+ * @param {Tower} tower
+ * @param {Number} shipIndex
+ * @returns {Boolean}
+ */
 Player.prototype.placeTowerRandom = function (tower, towerIndex) {
   var i, gridIndex, xMax, yMax, tryMax = 250;
 
@@ -140,11 +183,11 @@ Player.prototype.placeTowerRandom = function (tower, towerIndex) {
     tower.x = Math.floor(Math.random() * xMax);
     tower.y = Math.floor(Math.random() * yMax);
 
-    if (!this.checkTowerOverlap(tower)) {
+    if (!this.checkTowerOverlap(tower) && this.isPosEarth(tower)) {
       // success - ship does not overlap or is adjacent to other ships
       // place ship array-index in shipGrid
       gridIndex = tower.y * Settings.gridCols + tower.x;
-      this.earth[gridIndex] = towerIndex;
+      this.shipGrid[gridIndex] = -3;
       return true;
     }
   }
@@ -170,7 +213,7 @@ Player.prototype.placeShipRandom = function (ship, shipIndex) {
     ship.x = Math.floor(Math.random() * xMax);
     ship.y = Math.floor(Math.random() * yMax);
 
-    if (!this.checkShipOverlap(ship) && !this.checkShipAdjacent(ship)) {
+    if (!this.checkShipOverlap(ship) && !this.checkShipAdjacent(ship) && this.isPosWater(ship)) {
       // success - ship does not overlap or is adjacent to other ships
       // place ship array-index in shipGrid
       gridIndex = ship.y * Settings.gridCols + ship.x;
@@ -190,10 +233,93 @@ Player.prototype.placeShipRandom = function (ship, shipIndex) {
  * @param {Ship} ship
  * @returns {Boolean} True if ship overlaps
  */
+Player.prototype.isPosEarth = function (tower) {
+  var gridIndex = tower.y * Settings.gridCols + tower.x;
+
+  if (this.shipGrid[gridIndex] == -2) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Check if a ship overlaps another ship in the grid.
+ * @param {Ship} ship
+ * @returns {Boolean} True if ship overlaps
+ */
+Player.prototype.isPosWater = function (ship) {
+  let gridIndex = ship.y * Settings.gridCols + ship.x;
+  let isWater = true
+  for (j = 0; j < ship.size; j++) {
+    if (this.shipGrid[gridIndex] != -1 ) {
+      isWater = false;
+    }
+    gridIndex += ship.horizontal ? 1 : Settings.gridCols;
+  }
+  return isWater;
+}
+
+/**
+ * Check if a ship overlaps another ship in the grid.
+ * @param {Ship} ship
+ * @returns {Boolean} True if ship overlaps
+ */
+Player.prototype.fillEarth = function (earth) {
+  let x = earth.x
+  let y = earth.y
+  var i, gridIndex;
+
+  for (i = 0; i < earth.size * earth.size; i++) {
+    gridIndex = y * Settings.gridCols + x;
+    this.shipGrid[gridIndex] = -2;
+    if (x == earth.x + earth.size - 1) {
+      x = earth.x;
+      y++;
+    } else {
+      x++;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Check if a ship overlaps another ship in the grid.
+ * @param {Ship} ship
+ * @returns {Boolean} True if ship overlaps
+ */
+Player.prototype.checkEarthOverlap = function (earth) {
+  let x = earth.x
+  let y = earth.y
+  var i, gridIndex;
+
+  for (i = 0; i < earth.size * earth.size; i++) {
+    gridIndex = y * Settings.gridCols + x;
+    if (this.shipGrid[gridIndex] >= 0 || this.shipGrid[gridIndex] == -2 || x >= (Settings.gridCols - 1) || y >= (Settings.gridRows - 1)) {
+      return true;
+    }
+    if (x == earth.x + earth.size - 1) {
+      x = earth.x;
+      y++;
+    } else {
+      x++;
+    }
+  }
+
+  return false;
+}
+
+
+/**
+ * Check if a ship overlaps another ship in the grid.
+ * @param {Ship} ship
+ * @returns {Boolean} True if ship overlaps
+ */
 Player.prototype.checkTowerOverlap = function (tower) {
   var gridIndex = tower.y * Settings.gridCols + tower.x;
 
-  if (this.earth[gridIndex] >= 0) {
+  if (this.shipGrid[gridIndex] == -3) {
     return true;
   }
 
@@ -242,30 +368,5 @@ Player.prototype.checkShipAdjacent = function (ship) {
 
   return false;
 }
-
-/**
- * Create ships and place them in grid in a prearranged layout
- */
-Player.prototype.createShips = function () {
-  var shipIndex, i, gridIndex, ship,
-    x = [1, 3, 5, 8, 8], y = [1, 2, 5, 2, 8],
-    horizontal = [false, true, false, false, true];
-
-  for (shipIndex = 0; shipIndex < Settings.ships.length; shipIndex++) {
-    ship = new Ship(Settings.ships[shipIndex]);
-    ship.horizontal = horizontal[shipIndex];
-    ship.x = x[shipIndex];
-    ship.y = y[shipIndex];
-
-    // place ship array-index in shipGrid
-    gridIndex = ship.y * Settings.gridCols + ship.x;
-    for (i = 0; i < ship.size; i++) {
-      this.shipGrid[gridIndex] = shipIndex;
-      gridIndex += ship.horizontal ? 1 : Settings.gridCols;
-    }
-
-    this.ships.push(ship);
-  }
-};
 
 module.exports = Player;
