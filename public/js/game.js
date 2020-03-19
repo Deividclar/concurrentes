@@ -100,6 +100,7 @@ var Game = (function () {
    * Update player's or opponent's grid.
    * @param {type} player
    * @param {type} gridState
+   * @param {type} earth
    * @returns {undefined}
    */
   function updateGrid(player, gridState, earth) {
@@ -144,7 +145,7 @@ var Game = (function () {
   }
 
   /*
-   * Draw a grid with squares, ships and shot marks
+   * Draw a grid with squares, towers and shot marks
    */
   function drawGridEarth(gridIndex, earth) {
     drawEarth(gridIndex, earth.earths)
@@ -219,7 +220,7 @@ var Game = (function () {
   };
 
   /**
-   * Draw shot marks on grid (black crosses for missed and red circles for hits)
+   * Draw visible towers on grid
    * @param {Number} gridIndex
    */
   function drawTowers(gridIndex, towers) {

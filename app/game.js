@@ -105,20 +105,20 @@ BattleshipGame.prototype.getGameState = function (player, gridOwner) {
     turn: this.currentPlayer === player,                 // is it this player's turn?
     gridIndex: player === gridOwner ? 0 : 1,             // which client grid to update (0 = own, 1 = opponent)
     grid: this.getGrid(gridOwner, player !== gridOwner), // hide unsunk ships if this is not own grid
-    earth: this.getEarth(gridOwner)
+    earth: this.getEarth(gridOwner, player !== gridOwner)
   };
 };
 
 /**
- * Get grid with ships for a player.
+ * Get grid with towers for a player.
  * @param {type} player Which player's grid to get
- * @param {type} hideShips Hide unsunk ships
+ * @param {type} hideTowers Hide unsunk tower
  * @returns {BattleshipGame.prototype.getGridState.battleshipGameAnonym$0}
  */
-BattleshipGame.prototype.getEarth = function (player) {
+BattleshipGame.prototype.getEarth = function (player, hideTowers) {
   return {
     earths: this.players[player].earths,
-    towers: this.players[player].towers
+    towers: hideTowers? this.players[player].getSunkTowers() :this.players[player].towers
   };
 };
 

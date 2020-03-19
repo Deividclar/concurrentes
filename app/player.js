@@ -72,7 +72,7 @@ Player.prototype.getSunkShips = function () {
 };
 
 /**
- * Get an array of sunk ships
+ * Get an array of sunk towers
  * @returns {undefined}
  */
 Player.prototype.getSunkTowers = function () {
@@ -88,8 +88,8 @@ Player.prototype.getSunkTowers = function () {
 };
 
 /**
- * Get the number of ships left
- * @returns {Number} Number of ships left
+ * Get the number of towers left
+ * @returns {Number} Number of towers left
  */
 Player.prototype.getTowersLeft = function () {
   var i, towerCount = 0;
@@ -120,7 +120,7 @@ Player.prototype.getShipsLeft = function () {
 }
 
 /**
- * Create ships and place them randomly in grid
+ * Create earths and place them randomly in grid
  * @returns {Boolean}
  */
 Player.prototype.createRandomEarths = function () {
@@ -142,7 +142,7 @@ Player.prototype.createRandomEarths = function () {
 
 
 /**
- * Create ships and place them randomly in grid
+ * Create towers and place them randomly in grid
  * @returns {Boolean}
  */
 Player.prototype.createRandomTowers = function () {
@@ -182,8 +182,8 @@ Player.prototype.createRandomShips = function () {
 };
 
 /**
- * Try to place a ship randomly in grid without overlapping another ship.
- * @param {Tower} tower
+ * Try to place a earth randomly in grid without overlapping another tower.
+ * @param {Earth} earth
  * @param {Number} shipIndex
  * @returns {Boolean}
  */
@@ -207,7 +207,7 @@ Player.prototype.placeEarthRandom = function (earth) {
 }
 
 /**
- * Try to place a ship randomly in grid without overlapping another ship.
+ * Try to place a tower randomly in grid without overlapping another tower.
  * @param {Tower} tower
  * @param {Number} shipIndex
  * @returns {Boolean}
@@ -224,8 +224,8 @@ Player.prototype.placeTowerRandom = function (tower, towerIndex) {
     tower.y = Math.floor(Math.random() * yMax);
 
     if (!this.checkTowerOverlap(tower) && this.isPosEarth(tower)) {
-      // success - ship does not overlap or is adjacent to other ships
-      // place ship array-index in shipGrid
+      // success - tower does not overlap or is adjacent to other ships
+      // place tower array-index in shipGrid
       gridIndex = tower.y * Settings.gridCols + tower.x;
       this.shipGrid[gridIndex] = -3;
       this.towerGrid[gridIndex] = towerIndex;
@@ -270,9 +270,9 @@ Player.prototype.placeShipRandom = function (ship, shipIndex) {
 }
 
 /**
- * Check if a ship overlaps another ship in the grid.
- * @param {Ship} ship
- * @returns {Boolean} True if ship overlaps
+ * Check if a tower overlaps another tower in the grid.
+ * @param {Tower} ship
+ * @returns {Boolean} True if tower overlaps
  */
 Player.prototype.isPosEarth = function (tower) {
   var gridIndex = tower.y * Settings.gridCols + tower.x;
@@ -302,8 +302,8 @@ Player.prototype.isPosWater = function (ship) {
 }
 
 /**
- * Check if a ship overlaps another ship in the grid.
- * @param {Ship} ship
+ * Check if a earth overlaps another earth in the grid.
+ * @param {Earth} earth
  * @returns {Boolean} True if ship overlaps
  */
 Player.prototype.fillEarth = function (earth) {
@@ -326,8 +326,8 @@ Player.prototype.fillEarth = function (earth) {
 }
 
 /**
- * Check if a ship overlaps another ship in the grid.
- * @param {Ship} ship
+ * Check if a earth overlaps another earth in the grid.
+ * @param {Earth} earth
  * @returns {Boolean} True if ship overlaps
  */
 Player.prototype.checkEarthOverlap = function (earth) {
@@ -353,8 +353,8 @@ Player.prototype.checkEarthOverlap = function (earth) {
 
 
 /**
- * Check if a ship overlaps another ship in the grid.
- * @param {Ship} ship
+ * Check if a tower overlaps another tower in the grid.
+ * @param {Tower} tower
  * @returns {Boolean} True if ship overlaps
  */
 Player.prototype.checkTowerOverlap = function (tower) {
